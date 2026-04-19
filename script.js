@@ -5,13 +5,15 @@ canvas.height = 600;
 canvas.width = 600;
 
 const ball = {
-    x: 100,
-    y: 100,
+    x: 0,
+    y: 0,
     width: 20,
     height: 20,
     vx: 0,
     vy: 0
 }
+ball.x = canvas.width / 2 - ball.width / 2; // center on x axis 
+ball.y = canvas.height / 2 - ball.height / 2; // center on y axis
 
 function update() {
 
@@ -21,7 +23,7 @@ function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     ctx.fillStyle = "white";
-    ctx.fillRect(canvas.width / 2 - ball.height / 2, canvas.height / 2 - ball.height / 2, ball.width, ball.height);
+    ctx.fillRect(ball.x, ball.y, ball.width, ball.height);
 }
 
 function gameLoop() {
