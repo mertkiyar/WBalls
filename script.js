@@ -6,13 +6,14 @@ canvas.width = 600;
 
 let score = 10;
 let levelDone = false;
+
 const ball = {
     x: 0,
     y: 0,
     width: 20,
     height: 20,
-    vx: 4,
-    vy: 5
+    vx: 6,
+    vy: 4
 }
 
 ball.x = canvas.width / 2 - ball.width / 2; // center on x axis 
@@ -50,7 +51,12 @@ function draw() {
 }
 
 function gameLoop() {
-    if (levelDone) return;
+    if (levelDone) {
+        ball.vx = 0;
+        ball.vy = 0;
+        ball.x = canvas.width / 2 - ball.width / 2;
+        ball.y = canvas.height / 2 - ball.height / 2;
+    }
     update();
     draw();
 
