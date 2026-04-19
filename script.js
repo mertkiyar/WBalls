@@ -16,7 +16,23 @@ ball.x = canvas.width / 2 - ball.width / 2; // center on x axis
 ball.y = canvas.height / 2 - ball.height / 2; // center on y axis
 
 function update() {
+    ball.x += ball.vx;
+    ball.y += ball.vy;
 
+    if (ball.x + ball.width > canvas.width) {
+        ball.vx *= -1;
+    }
+    if (ball.x < 0) {
+        ball.vx *= -1;
+    }
+
+    if (ball.y + ball.width > canvas.height) {
+        ball.vy *= -1
+    }
+
+    if (ball.y < 0) {
+        ball.vy *= -1
+    }
 }
 
 function draw() {
