@@ -43,12 +43,10 @@ function draw() {
     ctx.fillRect(ball.x, ball.y, ball.width, ball.height);
 
     ctx.font = "190px Arial";
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
     ctx.textAlign = "center"; // center horizontal
     ctx.textBaseline = "middle" // center vertical
-    ctx.globalAlpha = "0.3" // opacity
     ctx.fillText(score, canvas.width / 2, canvas.height / 2);
-    ctx.globalAlpha = 1; // reset opacity for ball
 }
 
 function gameLoop() {
