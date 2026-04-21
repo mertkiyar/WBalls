@@ -41,7 +41,16 @@ function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     ctx.fillStyle = "white";
-    ctx.fillRect(ball.x, ball.y, ball.width, ball.height);
+    // ctx.fillRect(ball.x, ball.y, ball.width, ball.height);
+    ctx.beginPath();
+    ctx.arc(
+        ball.x + ball.width / 2, // center of x
+        ball.y + ball.height / 2, // center of y
+        ball.width / 2, // radius
+        0,
+        Math.PI * 2
+    );
+    ctx.fill();
 
     ctx.font = "190px Arial";
     ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
