@@ -52,7 +52,7 @@ function draw() {
     );
     ctx.fill();
 
-    ctx.font = "190px Arial";
+    ctx.font = "190px Helvetica";
     ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
     ctx.textAlign = "center"; // center horizontal
     ctx.textBaseline = "middle" // center vertical
