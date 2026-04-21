@@ -6,18 +6,38 @@ canvas.width = 600;
 
 let score = 10;
 let levelDone = false;
+let firstTouch = false;
 
 const ball = {
     x: 0,
     y: 0,
     width: 20,
     height: 20,
-    vx: 6,
-    vy: 4
+    vx: 0,
+    vy: 0,
+    speed: 9
 }
 
 ball.x = canvas.width / 2 - ball.width / 2; // center on x axis 
 ball.y = canvas.height / 2 - ball.height / 2; // center on y axis
+
+canvas.addEventListener("click", (e) => {
+    if (firstTouch) return;
+
+    let mouseX = e.offsetX; //mouse x axis position(target)
+    let mouseY = e.offsetY; //mouse y axis position(target)
+
+    //direction = target pos - current pos
+    let dx = mouseX - ball.x; //direction x
+    let dy = mouseY - ball.y; //direction y
+
+    let length = Math.sqrt(dx * dx + dy * dy); //pisagor threorem
+
+    ball.vx = (dx / length) * ball.speed;
+    ball.vy = (dy / length) * ball.speed;
+
+    firstTouch = true;
+});
 
 function update() {
     ball.x += ball.vx;
