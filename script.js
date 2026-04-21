@@ -33,6 +33,8 @@ function update() {
     }
 
     if (score <= 0) {
+        ball.vx *= 0;
+        ball.vy *= 0;
         levelDone = true;
     }
 }
@@ -40,7 +42,7 @@ function update() {
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "lime";
     // ctx.fillRect(ball.x, ball.y, ball.width, ball.height);
     ctx.beginPath();
     ctx.arc(
