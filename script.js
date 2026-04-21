@@ -42,6 +42,7 @@ function update() {
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    //Ball
     ctx.fillStyle = "lime";
     // ctx.fillRect(ball.x, ball.y, ball.width, ball.height);
     ctx.beginPath();
@@ -54,11 +55,23 @@ function draw() {
     );
     ctx.fill();
 
+    // Score
     ctx.font = "190px Helvetica";
     ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
     ctx.textAlign = "center"; // center horizontal
     ctx.textBaseline = "middle" // center vertical
     ctx.fillText(score, canvas.width / 2, canvas.height / 2);
+
+    //Borders
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width - 300, 10); //top left
+    ctx.fillRect(canvas.width, 0, -100, 10); //top right
+    ctx.fillRect(0, 0, 10, canvas.height - 400); //left up 
+    ctx.fillRect(0, canvas.height, 10, -300); //left down
+    ctx.fillRect(canvas.width, 0, -10, canvas.height - 300); //right up
+    ctx.fillRect(canvas.width, canvas.height, -10, -100); //right down
+    ctx.fillRect(0, canvas.height, canvas.width - 500, -10); //bottom left
+    ctx.fillRect(canvas.width, canvas.height, -400, -10); //bottom right
 }
 
 function gameLoop() {
