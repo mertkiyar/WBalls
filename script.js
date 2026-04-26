@@ -95,7 +95,7 @@ function update() {
     if (ball.y < 0) {
         if (ballCenterX < 300 || ballCenterX > 500) {
             ball.vy *= -1;
-            ball.y = 0;
+            ball.y = 10;
             playSound("sounds/hit-1.mp3");
             score -= 1;
         }
@@ -105,7 +105,7 @@ function update() {
     if (ball.x < 0) {
         if (ballCenterY < 200 || ballCenterY > 300) {
             ball.vx *= -1;
-            ball.x = 0;
+            ball.x = 10;
             playSound("sounds/hit-1.mp3");
             score -= 1;
         }
@@ -115,7 +115,7 @@ function update() {
     if (ball.x + ball.width > canvas.width) {
         if (ballCenterY < 350 || ballCenterY > 450) {
             ball.vx *= -1;
-            ball.x = canvas.width - ball.width;
+            ball.x = canvas.width - ball.width - 10;
             playSound("sounds/hit-1.mp3");
             score -= 1;
         }
@@ -125,7 +125,7 @@ function update() {
     if (ball.y + ball.height > canvas.height) {
         if (ballCenterX < 100 || ballCenterX > 200) {
             ball.vy *= -1
-            ball.y = canvas.height - ball.height;
+            ball.y = canvas.height - ball.height - 10;
             playSound("sounds/hit-1.mp3");
             score -= 1;
         }
