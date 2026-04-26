@@ -22,15 +22,10 @@ const ball = {
 const hitSound = new Audio('hit-1.mp3');
 const gameOverSound = new Audio('gameOver.mp3');
 
-function playHitSound() {
-    hitSound.currentTime = 0;
-    hitSound.play();
+function playSound(snd) {
+    const sound = new Audio(snd);
+    sound.play();
 }
-function playGameOverSound() {
-    gameOverSound.currentTime = 0;
-    gameOverSound.play();
-}
-
 
 ball.x = canvas.width / 2 - ball.width / 2; // center on x axis 
 ball.y = canvas.height / 2 - ball.height / 2; // center on y axis
@@ -76,7 +71,7 @@ function update() {
         if (ballCenterX < 300 || ballCenterX > 500) {
             ball.vy *= -1;
             ball.y = 0;
-            playHitSound();
+            playSound("hit-1.mp3");
             score -= 1;
         }
     }
@@ -86,7 +81,7 @@ function update() {
         if (ballCenterY < 200 || ballCenterY > 300) {
             ball.vx *= -1;
             ball.x = 0;
-            playHitSound();
+            playSound("hit-1.mp3");
             score -= 1;
         }
     }
@@ -96,7 +91,7 @@ function update() {
         if (ballCenterY < 350 || ballCenterY > 450) {
             ball.vx *= -1;
             ball.x = canvas.width - ball.width;
-            playHitSound();
+            playSound("hit-1.mp3");
             score -= 1;
         }
     }
@@ -106,7 +101,7 @@ function update() {
         if (ballCenterX < 100 || ballCenterX > 200) {
             ball.vy *= -1
             ball.y = canvas.height - ball.height;
-            playHitSound();
+            playSound("hit-1.mp3");
             score -= 1;
         }
     }
@@ -114,7 +109,7 @@ function update() {
     if (ball.x < -20 || ball.x + ball.width / 2 > canvas.width + 20 ||
         ball.y < -20 || ball.y + ball.height / 2 > canvas.height + 20) {
         gameOver = true;
-        playGameOverSound();
+        playSound("gameOver.mp3");
         // alert("The ball is in other lands now... forget it!");
     }
 
