@@ -19,6 +19,18 @@ const ball = {
     vy: 0,
     speed: 9
 }
+const hitSound = new Audio('hit-1.mp3');
+const gameOverSound = new Audio('gameOver.mp3');
+
+function playHitSound() {
+    hitSound.currentTime = 0;
+    hitSound.play();
+}
+function playGameOverSound() {
+    gameOverSound.currentTime = 0;
+    gameOverSound.play();
+}
+
 
 ball.x = canvas.width / 2 - ball.width / 2; // center on x axis 
 ball.y = canvas.height / 2 - ball.height / 2; // center on y axis
@@ -64,6 +76,7 @@ function update() {
         if (ballCenterX < 300 || ballCenterX > 500) {
             ball.vy *= -1;
             ball.y = 0;
+            playHitSound();
             score -= 1;
         }
     }
@@ -73,6 +86,7 @@ function update() {
         if (ballCenterY < 200 || ballCenterY > 300) {
             ball.vx *= -1;
             ball.x = 0;
+            playHitSound();
             score -= 1;
         }
     }
@@ -82,6 +96,7 @@ function update() {
         if (ballCenterY < 350 || ballCenterY > 450) {
             ball.vx *= -1;
             ball.x = canvas.width - ball.width;
+            playHitSound();
             score -= 1;
         }
     }
@@ -91,6 +106,7 @@ function update() {
         if (ballCenterX < 100 || ballCenterX > 200) {
             ball.vy *= -1
             ball.y = canvas.height - ball.height;
+            playHitSound();
             score -= 1;
         }
     }
@@ -98,7 +114,8 @@ function update() {
     if (ball.x < -20 || ball.x + ball.width / 2 > canvas.width + 20 ||
         ball.y < -20 || ball.y + ball.height / 2 > canvas.height + 20) {
         gameOver = true;
-        alert("The ball is in other lands now... forget it!");
+        playGameOverSound();
+        // alert("The ball is in other lands now... forget it!");
     }
 
     if (score <= 0 && !alertShow) {
@@ -107,8 +124,7 @@ function update() {
         score = 0;
         levelDone = true;
         alertShow = true;
-        alert("You did it, you took away the freedom of the ball. Are you happy now?");
-        location.reload();
+        // alert("You did it, you took away the freedom of the ball. Are you happy now?");
     }
 }
 
@@ -149,6 +165,19 @@ function draw() {
     //bottom
     ctx.fillRect(0, canvas.height, canvas.width - 500, -10); //left
     ctx.fillRect(canvas.width, canvas.height, -400, -10); //right
+
+    if (gameOver || levelDone) {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = "white";
+        ctx.font = "30px Arial";
+        let message = gameOver ? "The ball is in other lands now..." : "You took away the freedom of the ball.";
+        ctx.fillText(message, canvas.width / 2, canvas.height / 2);
+
+        ctx.font = "20px Arial";
+        ctx.fillText("Press F5 to try again", canvas.width / 2, canvas.height / 2 + 50);
+    }
 }
 
 function gameLoop() {
