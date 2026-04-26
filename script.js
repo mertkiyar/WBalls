@@ -8,7 +8,7 @@ let score = 10;
 let levelDone = false;
 let gameOver = false;
 let firstTouch = false;
-let alertShow = false;
+let debugMode = false;
 
 const ball = {
     x: 0,
@@ -18,13 +18,6 @@ const ball = {
     vx: 0,
     vy: 0,
     speed: 9
-}
-const hitSound = new Audio('hit-1.mp3');
-const gameOverSound = new Audio('gameOver.mp3');
-
-function playSound(snd) {
-    const sound = new Audio(snd);
-    sound.play();
 }
 
 ball.x = canvas.width / 2 - ball.width / 2; // center on x axis 
@@ -47,6 +40,38 @@ canvas.addEventListener("click", (e) => {
 
     firstTouch = true;
 });
+
+//if d key pressed, opens debug mode.
+document.addEventListener("keydown", (e) => {
+    if (e.key.toLowerCase() === "d") {
+        debugMode = !debugMode;
+    }
+});
+
+function playSound(snd) {
+    const sound = new Audio(snd);
+    sound.play();
+}
+
+function drawDebug() {
+    if (!debugMode) return;
+
+    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+    ctx.fillRect(10, 10, 180, 90);
+
+    ctx.fillStyle = "lime";
+    ctx.font = "14px Monospace";
+    ctx.textAlign = "left";
+
+    ctx.fillText(`X: ${ball.x.toFixed(2)}`, 20, 30);
+    ctx.fillText(`Y: ${ball.y.toFixed(2)}`, 20, 50);
+    ctx.fillText(`VX: ${ball.vx.toFixed(2)}`, 20, 70);
+    ctx.fillText(`VY: ${ball.vy.toFixed(2)}`, 20, 90);
+
+    ctx.strokeStyle = "yellow";
+    ctx.lineWidth = 3;
+    ctx.strokeRect(ball.x, ball.y, ball.width, ball.height);
+}
 
 function update() {
     if (levelDone || gameOver) return;
@@ -71,7 +96,7 @@ function update() {
         if (ballCenterX < 300 || ballCenterX > 500) {
             ball.vy *= -1;
             ball.y = 0;
-            playSound("hit-1.mp3");
+            playSound("sounds/hit-1.mp3");
             score -= 1;
         }
     }
@@ -81,7 +106,7 @@ function update() {
         if (ballCenterY < 200 || ballCenterY > 300) {
             ball.vx *= -1;
             ball.x = 0;
-            playSound("hit-1.mp3");
+            playSound("sounds/hit-1.mp3");
             score -= 1;
         }
     }
@@ -91,7 +116,7 @@ function update() {
         if (ballCenterY < 350 || ballCenterY > 450) {
             ball.vx *= -1;
             ball.x = canvas.width - ball.width;
-            playSound("hit-1.mp3");
+            playSound("sounds/hit-1.mp3");
             score -= 1;
         }
     }
@@ -101,7 +126,7 @@ function update() {
         if (ballCenterX < 100 || ballCenterX > 200) {
             ball.vy *= -1
             ball.y = canvas.height - ball.height;
-            playSound("hit-1.mp3");
+            playSound("sounds/hit-1.mp3");
             score -= 1;
         }
     }
@@ -109,16 +134,16 @@ function update() {
     if (ball.x < -20 || ball.x + ball.width / 2 > canvas.width + 20 ||
         ball.y < -20 || ball.y + ball.height / 2 > canvas.height + 20) {
         gameOver = true;
-        playSound("gameOver.mp3");
+        playSound("sounds/gameOver.mp3");
         // alert("The ball is in other lands now... forget it!");
     }
 
-    if (score <= 0 && !alertShow) {
+    if (score <= 0) {
         ball.vx *= 0;
         ball.vy *= 0;
         score = 0;
         levelDone = true;
-        alertShow = true;
+        playSound("sounds/levelDone.mp3");
         // alert("You did it, you took away the freedom of the ball. Are you happy now?");
     }
 }
@@ -162,7 +187,7 @@ function draw() {
     ctx.fillRect(canvas.width, canvas.height, -400, -10); //right
 
     if (gameOver || levelDone) {
-        ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+        ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         ctx.fillStyle = "white";
@@ -173,14 +198,17 @@ function draw() {
         ctx.font = "20px Arial";
         ctx.fillText("Press F5 to try again", canvas.width / 2, canvas.height / 2 + 50);
     }
+    drawDebug();
 }
 
 function gameLoop() {
     if (levelDone || gameOver) {
         ball.vx = 0;
         ball.vy = 0;
-        ball.x = canvas.width / 2 - ball.width / 2;
-        ball.y = canvas.height / 2 - ball.height / 2;
+        if (!debugMode) {
+            ball.x = canvas.width / 2 - ball.width / 2;
+            ball.y = canvas.height / 2 - ball.height / 2;
+        }
     }
     update();
     draw();
