@@ -6,7 +6,9 @@ canvas.width = 600;
 
 let score = 10;
 let levelDone = false;
+let gameOver = false;
 let firstTouch = false;
+let alertShow = false;
 
 const ball = {
     x: 0,
@@ -40,22 +42,73 @@ canvas.addEventListener("click", (e) => {
 });
 
 function update() {
+    if (levelDone || gameOver) return;
     ball.x += ball.vx;
     ball.y += ball.vy;
-    if (ball.x + ball.width > canvas.width || ball.x < 0) {
-        ball.vx *= -1;
-        score -= 1;
+
+    const ballCenterX = ball.x + ball.width / 2;
+    const ballCenterY = ball.y + ball.height / 2;
+
+    // if (ball.x + ball.width > canvas.width || ball.x < 0) {
+    //     ball.vx *= -1;
+    //     score -= 1;
+    // }
+
+    // if (ball.y + ball.width > canvas.height || ball.y < 0) {
+    //     ball.vy *= -1
+    //     score -= 1;
+    // }
+
+    //top wall
+    if (ball.y < 0) {
+        if (ballCenterX < 300 || ballCenterX > 500) {
+            ball.vy *= -1;
+            ball.y = 0;
+            score -= 1;
+        }
     }
 
-    if (ball.y + ball.width > canvas.height || ball.y < 0) {
-        ball.vy *= -1
-        score -= 1;
+    //left wall
+    if (ball.x < 0) {
+        if (ballCenterY < 200 || ballCenterY > 300) {
+            ball.vx *= -1;
+            ball.x = 0;
+            score -= 1;
+        }
     }
 
-    if (score <= 0) {
+    //right wall
+    if (ball.x + ball.width > canvas.width) {
+        if (ballCenterY < 350 || ballCenterY > 450) {
+            ball.vx *= -1;
+            ball.x = canvas.width - ball.width;
+            score -= 1;
+        }
+    }
+
+    //bottom wall
+    if (ball.y + ball.height > canvas.height) {
+        if (ballCenterX < 100 || ballCenterX > 200) {
+            ball.vy *= -1
+            ball.y = canvas.height - ball.height;
+            score -= 1;
+        }
+    }
+
+    if (ball.x < -20 || ball.x + ball.width / 2 > canvas.width + 20 ||
+        ball.y < -20 || ball.y + ball.height / 2 > canvas.height + 20) {
+        gameOver = true;
+        alert("The ball is in other lands now... forget it!");
+    }
+
+    if (score <= 0 && !alertShow) {
         ball.vx *= 0;
         ball.vy *= 0;
+        score = 0;
         levelDone = true;
+        alertShow = true;
+        alert("You did it, you took away the freedom of the ball. Are you happy now?");
+        location.reload();
     }
 }
 
@@ -84,18 +137,22 @@ function draw() {
 
     //Borders
     ctx.fillStyle = "white";
-    ctx.fillRect(0, 0, canvas.width - 300, 10); //top left
-    ctx.fillRect(canvas.width, 0, -100, 10); //top right
-    ctx.fillRect(0, 0, 10, canvas.height - 400); //left up 
-    ctx.fillRect(0, canvas.height, 10, -300); //left down
-    ctx.fillRect(canvas.width, 0, -10, canvas.height - 300); //right up
-    ctx.fillRect(canvas.width, canvas.height, -10, -100); //right down
-    ctx.fillRect(0, canvas.height, canvas.width - 500, -10); //bottom left
-    ctx.fillRect(canvas.width, canvas.height, -400, -10); //bottom right
+    //top
+    ctx.fillRect(0, 0, canvas.width - 300, 10); //left
+    ctx.fillRect(canvas.width, 0, -100, 10); //right
+    //left
+    ctx.fillRect(0, 0, 10, canvas.height - 400); //up 
+    ctx.fillRect(0, canvas.height, 10, -300); //down
+    //right
+    ctx.fillRect(canvas.width, 0, -10, canvas.height - 250); //up
+    ctx.fillRect(canvas.width, canvas.height, -10, -150); //down
+    //bottom
+    ctx.fillRect(0, canvas.height, canvas.width - 500, -10); //left
+    ctx.fillRect(canvas.width, canvas.height, -400, -10); //right
 }
 
 function gameLoop() {
-    if (levelDone) {
+    if (levelDone || gameOver) {
         ball.vx = 0;
         ball.vy = 0;
         ball.x = canvas.width / 2 - ball.width / 2;
