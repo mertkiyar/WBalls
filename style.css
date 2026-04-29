@@ -14,5 +14,17 @@ canvas {
     width: 600px;
     height: 600px;
     background-color: rgb(70, 70, 70);
+}
 
+#title {
+    font-family: "Courier";
+    font-size: 48pt;
+    color: coral;
+}
+
+#desc {
+    display: flex;
+    gap: 40px;
+    font-family: "Iceberg", sans-serif;
+    color: coral;
 }

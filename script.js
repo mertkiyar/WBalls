@@ -5,6 +5,7 @@ canvas.height = 600;
 canvas.width = 600;
 
 let score = 10;
+let pause = false;
 let levelDone = false;
 let gameOver = false;
 let firstTouch = false;
@@ -45,6 +46,19 @@ canvas.addEventListener("click", (e) => {
 document.addEventListener("keydown", (e) => {
     if (e.key.toLowerCase() === "d") {
         debugMode = !debugMode;
+    }
+});
+// press R to try again
+document.addEventListener("keydown", (e) => {
+    if (e.key.toLowerCase() === "r") {
+        location.reload();
+    }
+});
+
+// press P to pause game
+document.addEventListener("keydown", (e) => {
+    if (e.key.toLowerCase() === "p") {
+        pause = !pause;
     }
 });
 
@@ -139,11 +153,13 @@ function update() {
     }
 
     if (score <= 0) {
-        ball.vx *= 0;
-        ball.vy *= 0;
-        score = 0;
-        levelDone = true;
-        playSound("sounds/levelDone.mp3");
+        score = "𝟬";
+        setTimeout(() => {
+            playSound("sounds/levelDone.mp3");
+            ball.vx *= 0;
+            ball.vy *= 0;
+            levelDone = true;
+        }, 500);
         // alert("You did it, you took away the freedom of the ball. Are you happy now?");
     }
 }
@@ -190,13 +206,13 @@ function draw() {
         ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        ctx.fillStyle = "white";
+        ctx.fillStyle = "cornflowerblue";
         ctx.font = "30px Arial";
         let message = gameOver ? "The ball is in other lands now..." : "You took away the freedom of the ball.";
         ctx.fillText(message, canvas.width / 2, canvas.height / 2);
 
         ctx.font = "20px Arial";
-        ctx.fillText("Press F5 to try again", canvas.width / 2, canvas.height / 2 + 50);
+        ctx.fillText("Press R to try again", canvas.width / 2, canvas.height / 2 + 50);
     }
     drawDebug();
 }
@@ -210,9 +226,10 @@ function gameLoop() {
             ball.y = canvas.height / 2 - ball.height / 2;
         }
     }
-    update();
-    draw();
-
+    if (!pause) {
+        update();
+    }
+    draw(); //it can be in if block
     requestAnimationFrame(gameLoop);
 }
 
