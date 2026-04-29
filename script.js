@@ -159,7 +159,7 @@ function update() {
             ball.vx *= 0;
             ball.vy *= 0;
             levelDone = true;
-        }, 500);
+        }, 100);
         // alert("You did it, you took away the freedom of the ball. Are you happy now?");
     }
 }
