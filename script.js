@@ -20,7 +20,7 @@ const ball = {
     vy: 0,
     speed: 9
 }
-const hitSound = new Audio("sounds/hit-1.mp3");
+const hitSound = new Audio("sounds/ballHit.mp3");
 const gameOverSound = new Audio("sounds/gameOver.mp3");
 const levelDoneSound = new Audio("sounds/levelDone.mp3");
 
