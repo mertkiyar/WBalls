@@ -20,6 +20,9 @@ const ball = {
     vy: 0,
     speed: 9
 }
+const hitSound = new Audio("sounds/hit-1.mp3");
+const gameOverSound = new Audio("sounds/gameOver.mp3");
+const levelDoneSound = new Audio("sounds/levelDone.mp3");
 
 ball.x = canvas.width / 2 - ball.width / 2; // center on x axis 
 ball.y = canvas.height / 2 - ball.height / 2; // center on y axis
@@ -62,8 +65,8 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
-function playSound(snd) {
-    const sound = new Audio(snd);
+function playSound(sound) {
+    sound.currentTime = 0;
     sound.play();
 }
 
@@ -110,7 +113,7 @@ function update() {
         if (ballCenterX < 300 || ballCenterX > 500) {
             ball.vy *= -1;
             ball.y = 10;
-            playSound("sounds/hit-1.mp3");
+            playSound(hitSound);
             score -= 1;
         }
     }
@@ -120,7 +123,7 @@ function update() {
         if (ballCenterY < 200 || ballCenterY > 300) {
             ball.vx *= -1;
             ball.x = 10;
-            playSound("sounds/hit-1.mp3");
+            playSound(hitSound);
             score -= 1;
         }
     }
@@ -130,7 +133,7 @@ function update() {
         if (ballCenterY < 350 || ballCenterY > 450) {
             ball.vx *= -1;
             ball.x = canvas.width - ball.width - 10;
-            playSound("sounds/hit-1.mp3");
+            playSound(hitSound);
             score -= 1;
         }
     }
@@ -140,7 +143,7 @@ function update() {
         if (ballCenterX < 100 || ballCenterX > 200) {
             ball.vy *= -1
             ball.y = canvas.height - ball.height - 10;
-            playSound("sounds/hit-1.mp3");
+            playSound(hitSound);
             score -= 1;
         }
     }
@@ -148,14 +151,14 @@ function update() {
     if (ball.x < -20 || ball.x + ball.width / 2 > canvas.width + 20 ||
         ball.y < -20 || ball.y + ball.height / 2 > canvas.height + 20) {
         gameOver = true;
-        playSound("sounds/gameOver.mp3");
+        playSound(gameOverSound);
         // alert("The ball is in other lands now... forget it!");
     }
 
     if (score <= 0) {
         score = "𝟬";
         setTimeout(() => {
-            playSound("sounds/levelDone.mp3");
+            playSound(levelDoneSound);
             ball.vx *= 0;
             ball.vy *= 0;
             levelDone = true;
