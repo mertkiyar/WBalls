@@ -13,6 +13,7 @@ let debugMode = false;
 let showRed;
 let showGreen;
 let showYellow;
+let soundPlayed = false;
 
 const ball = {
     x: 0,
@@ -30,6 +31,9 @@ const gameOverSound = new Audio("sounds/gameOver.wav");
 gameOverSound.preload = "auto";
 const levelDoneSound = new Audio("sounds/levelDone.wav");
 levelDoneSound.preload = "auto";
+const endGameMenu = document.getElementById("endGameMenu");
+const restartBtn = document.getElementById("restartBtn");
+const nextLevelBtn = document.getElementById("nextLevelBtn");
 
 ball.x = canvas.width / 2 - ball.width / 2; // center on x axis 
 ball.y = canvas.height / 2 - ball.height / 2; // center on y axis
@@ -78,10 +82,13 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
-// function playSound(sound) {
-//     sound.currentTime = 0;
-//     sound.play();
-// }
+restartBtn.addEventListener("click", () => {
+    location.reload();
+});
+
+nextLevelBtn.addEventListener("click", () => {
+    alert("coming soon!");
+});
 function playSound(sound) {
     const clone = sound.cloneNode();
     clone.play().catch(error => {
@@ -181,15 +188,21 @@ function update() {
         ball.y < -20 || ball.y + ball.height / 2 > canvas.height + 20) {
         gameOver = true;
         playSound(gameOverSound);
+
+        endGameMenu.style.display = "flex";
+        nextLevelBtn.style.display = "none";
     }
 
-    if (score <= 0) {
-        score = "𝟬";
+    if (score == 0 && !soundPlayed) {
+        soundPlayed = true;
         setTimeout(() => {
             playSound(levelDoneSound);
             ball.vx *= 0;
             ball.vy *= 0;
             levelDone = true;
+
+            endGameMenu.style.display = "flex";
+            nextLevelBtn.style.display = "block";
         }, 100);
     }
 }
@@ -246,18 +259,31 @@ function draw() {
     }
     ctx.fillRect(canvas.width, canvas.height, -400, -10); //right
 
-    if (gameOver || levelDone) {
-        ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+    if (gameOver) {
+        ctx.fillStyle = "rgba(100, 0, 0, 0.6)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        ctx.fillStyle = "cornflowerblue";
-        ctx.font = "30px Arial";
-        let message = gameOver ? "The ball is in other lands now..." : "You took away the freedom of the ball.";
-        ctx.fillText(message, canvas.width / 2, canvas.height / 2);
+        ctx.fillStyle = "tomato";
+        ctx.font = "bold 40px Iceberg";
+        ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 40);
 
-        ctx.font = "20px Arial";
-        ctx.fillText("Press R to try again", canvas.width / 2, canvas.height / 2 + 50);
+        ctx.fillStyle = "white";
+        ctx.font = "20px Iceberg";
+        ctx.fillText("The ball is in other lands now...", canvas.width / 2, canvas.height / 2 + 10);
+
+    } else if (levelDone) {
+        ctx.fillStyle = "rgba(0, 50, 0, 0.6)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = "gold";
+        ctx.font = "bold 40px Iceberg";
+        ctx.fillText("LEVEL CLEARED", canvas.width / 2, canvas.height / 2 - 40);
+
+        ctx.fillStyle = "white";
+        ctx.font = "20px Iceberg";
+        ctx.fillText("You took away the freedom of the ball.", canvas.width / 2, canvas.height / 2 + 10);
     }
+
     drawDebug();
 }
 
@@ -270,9 +296,8 @@ function gameLoop() {
             ball.y = canvas.height / 2 - ball.height / 2;
         }
     }
-
     update();
-    draw(); //it can be in if block
+    draw();
     requestAnimationFrame(gameLoop);
 }
 
