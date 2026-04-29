@@ -23,14 +23,24 @@ const ball = {
     vy: 0,
     speed: 9
 }
-const hitSound = new Audio("sounds/ballHit.mp3");
-const gameOverSound = new Audio("sounds/gameOver.mp3");
-const levelDoneSound = new Audio("sounds/levelDone.mp3");
+
+const hitSound = new Audio("sounds/ballHit.wav");
+hitSound.preload = "auto";
+const gameOverSound = new Audio("sounds/gameOver.wav");
+gameOverSound.preload = "auto";
+const levelDoneSound = new Audio("sounds/levelDone.wav");
+levelDoneSound.preload = "auto";
 
 ball.x = canvas.width / 2 - ball.width / 2; // center on x axis 
 ball.y = canvas.height / 2 - ball.height / 2; // center on y axis
 
 canvas.addEventListener("click", (e) => {
+    if (!firstTouch) {
+        hitSound.load();
+        gameOverSound.load();
+        levelDoneSound.load();
+    }
+
     if (firstTouch) return;
 
     let mouseX = e.offsetX; //mouse x axis position(target)
@@ -68,9 +78,15 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
+// function playSound(sound) {
+//     sound.currentTime = 0;
+//     sound.play();
+// }
 function playSound(sound) {
-    sound.currentTime = 0;
-    sound.play();
+    const clone = sound.cloneNode();
+    clone.play().catch(error => {
+        console.log("The browser stops the sound:", error);
+    });
 }
 
 function drawDebug() {
