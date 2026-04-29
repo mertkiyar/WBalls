@@ -10,6 +10,9 @@ let levelDone = false;
 let gameOver = false;
 let firstTouch = false;
 let debugMode = false;
+let showRed;
+let showGreen;
+let showYellow;
 
 const ball = {
     x: 0,
@@ -92,21 +95,16 @@ function drawDebug() {
 
 function update() {
     if (levelDone || gameOver || pause) return;
+
+    showRed = score > 6;
+    showGreen = score > 4;
+    showYellow = score > 2;
+
     ball.x += ball.vx;
     ball.y += ball.vy;
 
     const ballCenterX = ball.x + ball.width / 2;
     const ballCenterY = ball.y + ball.height / 2;
-
-    // if (ball.x + ball.width > canvas.width || ball.x < 0) {
-    //     ball.vx *= -1;
-    //     score -= 1;
-    // }
-
-    // if (ball.y + ball.width > canvas.height || ball.y < 0) {
-    //     ball.vy *= -1
-    //     score -= 1;
-    // }
 
     //top wall
     if (ball.y < 0) {
@@ -125,12 +123,22 @@ function update() {
             ball.x = 10;
             playSound(hitSound);
             score -= 1;
+        } else if (showRed) {
+            ball.vx *= -1;
+            ball.x = 10;
+            playSound(hitSound);
+            score -= 1;
         }
     }
 
     //right wall
     if (ball.x + ball.width > canvas.width) {
         if (ballCenterY < 350 || ballCenterY > 450) {
+            ball.vx *= -1;
+            ball.x = canvas.width - ball.width - 10;
+            playSound(hitSound);
+            score -= 1;
+        } else if (showYellow) {
             ball.vx *= -1;
             ball.x = canvas.width - ball.width - 10;
             playSound(hitSound);
@@ -145,6 +153,11 @@ function update() {
             ball.y = canvas.height - ball.height - 10;
             playSound(hitSound);
             score -= 1;
+        } else if (showGreen) {
+            ball.vy *= -1
+            ball.y = canvas.height - ball.height - 10;
+            playSound(hitSound);
+            score -= 1;
         }
     }
 
@@ -152,7 +165,6 @@ function update() {
         ball.y < -20 || ball.y + ball.height / 2 > canvas.height + 20) {
         gameOver = true;
         playSound(gameOverSound);
-        // alert("The ball is in other lands now... forget it!");
     }
 
     if (score <= 0) {
@@ -163,7 +175,6 @@ function update() {
             ball.vy *= 0;
             levelDone = true;
         }, 100);
-        // alert("You did it, you took away the freedom of the ball. Are you happy now?");
     }
 }
 
@@ -172,7 +183,6 @@ function draw() {
 
     //Ball
     ctx.fillStyle = "lime";
-    // ctx.fillRect(ball.x, ball.y, ball.width, ball.height);
     ctx.beginPath();
     ctx.arc(
         ball.x + ball.width / 2, // center of x
@@ -190,19 +200,34 @@ function draw() {
     ctx.textBaseline = "middle" // center vertical
     ctx.fillText(score, canvas.width / 2, canvas.height / 2);
 
-    //Borders
+    //Borders (no collision)
     ctx.fillStyle = "white";
     //top
     ctx.fillRect(0, 0, canvas.width - 300, 10); //left
     ctx.fillRect(canvas.width, 0, -100, 10); //right
     //left
     ctx.fillRect(0, 0, 10, canvas.height - 400); //up 
+    if (showRed) {
+        ctx.fillStyle = "red";
+        ctx.fillRect(0, canvas.height - 400, 10, 100);//mid
+        ctx.fillStyle = "white";
+    }
     ctx.fillRect(0, canvas.height, 10, -300); //down
     //right
     ctx.fillRect(canvas.width, 0, -10, canvas.height - 250); //up
+    if (showYellow) {
+        ctx.fillStyle = "yellow";
+        ctx.fillRect(canvas.width, canvas.height - 250, -10, 100); //mid    
+        ctx.fillStyle = "white";
+    }
     ctx.fillRect(canvas.width, canvas.height, -10, -150); //down
     //bottom
     ctx.fillRect(0, canvas.height, canvas.width - 500, -10); //left
+    if (showGreen) {
+        ctx.fillStyle = "lime";
+        ctx.fillRect(canvas.width - 500, canvas.width, 100, -10); //mid
+        ctx.fillStyle = "white";
+    }
     ctx.fillRect(canvas.width, canvas.height, -400, -10); //right
 
     if (gameOver || levelDone) {
@@ -229,6 +254,7 @@ function gameLoop() {
             ball.y = canvas.height / 2 - ball.height / 2;
         }
     }
+
     update();
     draw(); //it can be in if block
     requestAnimationFrame(gameLoop);
