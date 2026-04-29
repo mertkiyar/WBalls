@@ -91,7 +91,7 @@ function drawDebug() {
 }
 
 function update() {
-    if (levelDone || gameOver) return;
+    if (levelDone || gameOver || pause) return;
     ball.x += ball.vx;
     ball.y += ball.vy;
 
@@ -229,9 +229,7 @@ function gameLoop() {
             ball.y = canvas.height / 2 - ball.height / 2;
         }
     }
-    if (!pause) {
-        update();
-    }
+    update();
     draw(); //it can be in if block
     requestAnimationFrame(gameLoop);
 }
