@@ -264,11 +264,32 @@ function draw() {
     ctx.fillText("LEVEL " + currentLevel, canvas.width / 2, canvas.height / 2 - 150);
 
     // Score
-    ctx.font = "190px Helvetica";
+    ctx.font = "250px Helvetica";
     ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
     ctx.textAlign = "center"; // center horizontal
     ctx.textBaseline = "middle" // center vertical
     ctx.fillText(score, canvas.width / 2, canvas.height / 2);
+
+    // Dash Line for Ball Direction (it can be circular)
+    if (!firstTouch && !gameOver && !levelDone) {
+        const ballCenterX = ball.x + ball.width / 2;
+        const ballCenterY = ball.y + ball.height / 2;
+
+        if (Math.abs(mouseX - ballCenterX) < 120 && Math.abs(mouseY - ballCenterY) < 120) {
+            ctx.beginPath();
+            ctx.moveTo(ballCenterX, ballCenterY);
+            ctx.lineTo(mouseX, mouseY);
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+        ctx.beginPath();
+        ctx.arc(mouseX, mouseY, 5, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+        ctx.fill();
+    }
 
     //Ball
     ctx.fillStyle = "tomato";
