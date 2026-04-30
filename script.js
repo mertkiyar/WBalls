@@ -51,8 +51,8 @@ canvas.addEventListener("click", (e) => {
     let mouseY = e.offsetY; //mouse y axis position(target)
 
     //direction = target pos - current pos
-    let dx = mouseX - ball.x; //direction x
-    let dy = mouseY - ball.y; //direction y
+    let dx = mouseX - (ball.x + ball.width / 2); //direction x
+    let dy = mouseY - (ball.y + ball.height / 2); //direction y
 
     let length = Math.sqrt(dx * dx + dy * dy); //pisagor threorem
 
@@ -130,7 +130,7 @@ function update() {
     const ballCenterY = ball.y + ball.height / 2;
 
     //top wall
-    if (ball.y < 0) {
+    if (ball.y < 10) {
         if (ballCenterX < 300 || ballCenterX > 500) {
             ball.vy *= -1;
             ball.y = 10;
@@ -140,7 +140,7 @@ function update() {
     }
 
     //left wall
-    if (ball.x < 0) {
+    if (ball.x < 10) {
         if (ballCenterY < 200 || ballCenterY > 300) {
             ball.vx *= -1;
             ball.x = 10;
@@ -155,7 +155,7 @@ function update() {
     }
 
     //right wall
-    if (ball.x + ball.width > canvas.width) {
+    if (ball.x + ball.width > canvas.width - 10) {
         if (ballCenterY < 350 || ballCenterY > 450) {
             ball.vx *= -1;
             ball.x = canvas.width - ball.width - 10;
@@ -170,7 +170,7 @@ function update() {
     }
 
     //bottom wall
-    if (ball.y + ball.height > canvas.height) {
+    if (ball.y + ball.height > canvas.height - 10) {
         if (ballCenterX < 100 || ballCenterX > 200) {
             ball.vy *= -1
             ball.y = canvas.height - ball.height - 10;
@@ -193,13 +193,13 @@ function update() {
         nextLevelBtn.style.display = "none";
     }
 
-    if (score == 0 && !soundPlayed) {
+    if (score <= 0 && !soundPlayed) {
         soundPlayed = true;
+        levelDone = true;
         setTimeout(() => {
             playSound(levelDoneSound);
             ball.vx *= 0;
             ball.vy *= 0;
-            levelDone = true;
 
             endGameMenu.style.display = "flex";
             nextLevelBtn.style.display = "block";
@@ -254,7 +254,7 @@ function draw() {
     ctx.fillRect(0, canvas.height, canvas.width - 500, -10); //left
     if (showGreen) {
         ctx.fillStyle = "lime";
-        ctx.fillRect(canvas.width - 500, canvas.width, 100, -10); //mid
+        ctx.fillRect(canvas.width - 500, canvas.height, 100, -10); //mid
         ctx.fillStyle = "white";
     }
     ctx.fillRect(canvas.width, canvas.height, -400, -10); //right
