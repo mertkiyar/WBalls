@@ -4,16 +4,23 @@ const ctx = canvas.getContext("2d");
 canvas.height = 600;
 canvas.width = 600;
 
-let score = 10;
+let currentLevel = 1;
+let scoreOfLevel = [4, 7, 9, 12, 15, 17, 19, 21, 23, 26]; // for now, it has 10 levels
+let score = scoreOfLevel[0];
+
 let pause = false;
 let levelDone = false;
 let gameOver = false;
 let firstTouch = false;
 let debugMode = false;
+let soundPlayed = false;
+
 let showRed;
 let showGreen;
 let showYellow;
-let soundPlayed = false;
+
+let mouseX = canvas.width / 2;
+let mouseY = canvas.height / 2;
 
 const ball = {
     x: 0,
@@ -25,18 +32,28 @@ const ball = {
     speed: 9
 }
 
+// sounds
 const hitSound = new Audio("sounds/ballHit.wav");
 hitSound.preload = "auto";
 const gameOverSound = new Audio("sounds/gameOver.wav");
 gameOverSound.preload = "auto";
 const levelDoneSound = new Audio("sounds/levelDone.wav");
 levelDoneSound.preload = "auto";
+
+//end menu (fail and success)
 const endGameMenu = document.getElementById("endGameMenu");
 const restartBtn = document.getElementById("restartBtn");
 const nextLevelBtn = document.getElementById("nextLevelBtn");
 
 ball.x = canvas.width / 2 - ball.width / 2; // center on x axis 
 ball.y = canvas.height / 2 - ball.height / 2; // center on y axis
+
+canvas.addEventListener("mousemove", (e) => {
+    if (!firstTouch) {
+        mouseX = e.offsetX; //mouse x axis position(target)
+        mouseY = e.offsetY; //mouse y axis position(target)
+    }
+});
 
 canvas.addEventListener("click", (e) => {
     if (!firstTouch) {
@@ -47,17 +64,16 @@ canvas.addEventListener("click", (e) => {
 
     if (firstTouch) return;
 
-    let mouseX = e.offsetX; //mouse x axis position(target)
-    let mouseY = e.offsetY; //mouse y axis position(target)
-
     //direction = target pos - current pos
     let dx = mouseX - (ball.x + ball.width / 2); //direction x
     let dy = mouseY - (ball.y + ball.height / 2); //direction y
 
     let length = Math.sqrt(dx * dx + dy * dy); //pisagor threorem
 
-    ball.vx = (dx / length) * ball.speed;
-    ball.vy = (dy / length) * ball.speed;
+    if (length > 0) {
+        ball.vx = (dx / length) * ball.speed;
+        ball.vy = (dy / length) * ball.speed;
+    }
 
     firstTouch = true;
 });
@@ -68,6 +84,7 @@ document.addEventListener("keydown", (e) => {
         debugMode = !debugMode;
     }
 });
+
 // press R to try again
 document.addEventListener("keydown", (e) => {
     if (e.key.toLowerCase() === "r") {
@@ -89,6 +106,7 @@ restartBtn.addEventListener("click", () => {
 nextLevelBtn.addEventListener("click", () => {
     alert("coming soon!");
 });
+
 function playSound(sound) {
     const clone = sound.cloneNode();
     clone.play().catch(error => {
@@ -129,7 +147,7 @@ function update() {
     const ballCenterX = ball.x + ball.width / 2;
     const ballCenterY = ball.y + ball.height / 2;
 
-    //top wall
+    //top wall collision
     if (ball.y < 10) {
         if (ballCenterX < 300 || ballCenterX > 500) {
             ball.vy *= -1;
@@ -139,7 +157,7 @@ function update() {
         }
     }
 
-    //left wall
+    //left wall collision
     if (ball.x < 10) {
         if (ballCenterY < 200 || ballCenterY > 300) {
             ball.vx *= -1;
@@ -154,7 +172,7 @@ function update() {
         }
     }
 
-    //right wall
+    //right wall collision
     if (ball.x + ball.width > canvas.width - 10) {
         if (ballCenterY < 350 || ballCenterY > 450) {
             ball.vx *= -1;
@@ -169,7 +187,7 @@ function update() {
         }
     }
 
-    //bottom wall
+    //bottom wall collision
     if (ball.y + ball.height > canvas.height - 10) {
         if (ballCenterX < 100 || ballCenterX > 200) {
             ball.vy *= -1
@@ -210,25 +228,6 @@ function update() {
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    //Ball
-    ctx.fillStyle = "lime";
-    ctx.beginPath();
-    ctx.arc(
-        ball.x + ball.width / 2, // center of x
-        ball.y + ball.height / 2, // center of y
-        ball.width / 2, // radius
-        0,
-        Math.PI * 2
-    );
-    ctx.fill();
-
-    // Score
-    ctx.font = "190px Helvetica";
-    ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
-    ctx.textAlign = "center"; // center horizontal
-    ctx.textBaseline = "middle" // center vertical
-    ctx.fillText(score, canvas.width / 2, canvas.height / 2);
-
     //Borders (no collision)
     ctx.fillStyle = "white";
     //top
@@ -258,6 +257,30 @@ function draw() {
         ctx.fillStyle = "white";
     }
     ctx.fillRect(canvas.width, canvas.height, -400, -10); //right
+
+    // Level
+    ctx.font = "30px Iceberg";
+    ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+    ctx.fillText("LEVEL " + currentLevel, canvas.width / 2, canvas.height / 2 - 150);
+
+    // Score
+    ctx.font = "190px Helvetica";
+    ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
+    ctx.textAlign = "center"; // center horizontal
+    ctx.textBaseline = "middle" // center vertical
+    ctx.fillText(score, canvas.width / 2, canvas.height / 2);
+
+    //Ball
+    ctx.fillStyle = "tomato";
+    ctx.beginPath();
+    ctx.arc(
+        ball.x + ball.width / 2, // center of x
+        ball.y + ball.height / 2, // center of y
+        ball.width / 2, // radius
+        0,
+        Math.PI * 2
+    );
+    ctx.fill();
 
     if (gameOver) {
         ctx.fillStyle = "rgba(100, 0, 0, 0.6)";
