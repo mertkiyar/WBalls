@@ -119,8 +119,13 @@ restartBtn.addEventListener("click", () => {
 });
 
 nextLevelBtn.addEventListener("click", () => {
-    currentLevel++;
-    startLevel();
+    if (currentLevel < 10) {
+        currentLevel++;
+        startLevel();
+    } else {
+        currentLevel = 1;
+        startLevel();
+    }
 });
 
 function playSound(sound) {
@@ -236,6 +241,11 @@ function update() {
             ball.vy *= 0;
 
             endGameMenu.style.display = "flex";
+            if (currentLevel == 10) {
+                nextLevelBtn.innerHTML = "RESET";
+            } else {
+                nextLevelBtn.innerHTML = "NEXT LEVEL";
+            }
             nextLevelBtn.style.display = "block";
         }, 100);
     }
