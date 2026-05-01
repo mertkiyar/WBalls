@@ -55,6 +55,7 @@ function startLevel() {
 
     firstTouch = false;
     levelDone = false;
+    pause = false;
     gameOver = false;
     soundPlayed = false;
 
@@ -110,7 +111,9 @@ document.addEventListener("keydown", (e) => {
 // press P to pause game
 document.addEventListener("keydown", (e) => {
     if (e.key.toLowerCase() === "p") {
-        pause = !pause;
+        if (firstTouch) {
+            pause = !pause;
+        }
     }
 });
 
