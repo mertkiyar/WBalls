@@ -137,9 +137,10 @@ function playSound(sound) {
 
 function drawDebug() {
     if (!debugMode) return;
+    ctx.save();
 
-    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
-    ctx.fillRect(10, 10, 180, 90);
+    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+    ctx.fillRect(10, 10, 120, 90);
 
     ctx.fillStyle = "lime";
     ctx.font = "14px Monospace";
@@ -153,6 +154,8 @@ function drawDebug() {
     ctx.strokeStyle = "yellow";
     ctx.lineWidth = 3;
     ctx.strokeRect(ball.x, ball.y, ball.width, ball.height);
+
+    ctx.restore();
 }
 
 function update() {
