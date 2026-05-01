@@ -45,8 +45,23 @@ const endGameMenu = document.getElementById("endGameMenu");
 const restartBtn = document.getElementById("restartBtn");
 const nextLevelBtn = document.getElementById("nextLevelBtn");
 
-ball.x = canvas.width / 2 - ball.width / 2; // center on x axis 
-ball.y = canvas.height / 2 - ball.height / 2; // center on y axis
+function startLevel() {
+    score = scoreOfLevel[currentLevel - 1];
+    ball.x = canvas.width / 2 - ball.width / 2; // center on x axis 
+    ball.y = canvas.height / 2 - ball.height / 2; // center on y axis
+
+    ball.vx = 0;
+    ball.vy = 0;
+
+    firstTouch = false;
+    levelDone = false;
+    gameOver = false;
+    soundPlayed = false;
+
+    endGameMenu.style.display = "none";
+}
+
+startLevel();
 
 canvas.addEventListener("mousemove", (e) => {
     if (!firstTouch) {
@@ -88,7 +103,7 @@ document.addEventListener("keydown", (e) => {
 // press R to try again
 document.addEventListener("keydown", (e) => {
     if (e.key.toLowerCase() === "r") {
-        location.reload();
+        startLevel();
     }
 });
 
@@ -100,11 +115,12 @@ document.addEventListener("keydown", (e) => {
 });
 
 restartBtn.addEventListener("click", () => {
-    location.reload();
+    startLevel();
 });
 
 nextLevelBtn.addEventListener("click", () => {
-    alert("coming soon!");
+    currentLevel++;
+    startLevel();
 });
 
 function playSound(sound) {
