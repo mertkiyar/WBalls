@@ -12,7 +12,7 @@ export function drawWalls(ctx, holes, score, canvasWidth, canvasHeight) {
         for (const segment of segments) {
             ctx.fillStyle = segment.color;
             const rect = segmentToRect(segment, side, canvasWidth, canvasHeight);
-            ctx.fillRext(rect.x, rect.y, rect.width, rect.height);
+            ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
         }
     }
 }
@@ -113,17 +113,16 @@ function getWallSegments(holes, edgeLenght, score) {
         }
 
         cursor = hole.end;
-
-        // last hole to wall drawing
-        if (cursor < edgeLenght) {
-            segments.push({
-                from: cursor,
-                to: edgeLenght,
-                color: "white"
-            });
-        }
-        return segments;
     }
+    // last hole to wall drawing
+    if (cursor < edgeLenght) {
+        segments.push({
+            from: cursor,
+            to: edgeLenght,
+            color: "white"
+        });
+    }
+    return segments;
 }
 // converts a segment to rect coord on the canvas
 function segmentToRect(segment, side, canvasWidth, canvasHeight) {
