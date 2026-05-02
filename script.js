@@ -1,4 +1,5 @@
-import { checkWallCollision, bounceBack, checkCollision } from './js/collisions.js';
+import { bounceBack, checkCollision } from './js/collisions.js';
+import { drawBall, drawDashLine, drawGameOver, drawLevelText, drawScoreText, drawWalls } from './js/renderer.js';
 import { LEVELS } from './js/levels.js';
 
 const canvas = document.getElementById("board");
@@ -215,104 +216,31 @@ function update() {
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    //Borders (no collision)
-    ctx.fillStyle = "white";
-    //top
-    ctx.fillRect(0, 0, canvas.width - 300, 10); //left
-    ctx.fillRect(canvas.width, 0, -100, 10); //right
-    //left
-    ctx.fillRect(0, 0, 10, canvas.height - 400); //up 
-    if (showRed) {
-        ctx.fillStyle = "red";
-        ctx.fillRect(0, canvas.height - 400, 10, 100);//mid
-        ctx.fillStyle = "white";
-    }
-    ctx.fillRect(0, canvas.height, 10, -300); //down
-    //right
-    ctx.fillRect(canvas.width, 0, -10, canvas.height - 250); //up
-    if (showYellow) {
-        ctx.fillStyle = "yellow";
-        ctx.fillRect(canvas.width, canvas.height - 250, -10, 100); //mid    
-        ctx.fillStyle = "white";
-    }
-    ctx.fillRect(canvas.width, canvas.height, -10, -150); //down
-    //bottom
-    ctx.fillRect(0, canvas.height, canvas.width - 500, -10); //left
-    if (showGreen) {
-        ctx.fillStyle = "lime";
-        ctx.fillRect(canvas.width - 500, canvas.height, 100, -10); //mid
-        ctx.fillStyle = "white";
-    }
-    ctx.fillRect(canvas.width, canvas.height, -400, -10); //right
+    const level = LEVELS[currentLevel - 1];
+
+    drawWalls(ctx, level.holes, score, canvas.width, canvas.height);
 
     // Level
-    ctx.font = "30px Iceberg";
-    ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
-    ctx.fillText("LEVEL " + currentLevel, canvas.width / 2, canvas.height / 2 - 150);
+    drawLevelText(ctx, currentLevel, score, canvas);
 
     // Score
-    ctx.font = "250px Helvetica";
-    ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
-    ctx.textAlign = "center"; // center horizontal
-    ctx.textBaseline = "middle" // center vertical
-    ctx.fillText(score, canvas.width / 2, canvas.height / 2);
+    drawScoreText(ctx, score, canvas);
 
     // Dash Line for Ball Direction (it can be circular)
     if (!firstTouch && !gameOver && !levelDone) {
         const ballCenterX = ball.x + ball.width / 2;
         const ballCenterY = ball.y + ball.height / 2;
 
-        if (Math.abs(mouseX - ballCenterX) < 120 && Math.abs(mouseY - ballCenterY) < 120) {
-            ctx.beginPath();
-            ctx.moveTo(ballCenterX, ballCenterY);
-            ctx.lineTo(mouseX, mouseY);
-            ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
-            ctx.lineWidth = 2;
-            ctx.setLineDash([5, 5]);
-            ctx.stroke();
-            ctx.setLineDash([]);
-        }
-        ctx.beginPath();
-        ctx.arc(mouseX, mouseY, 5, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
-        ctx.fill();
+        drawDashLine(ctx, ballCenterX, ballCenterY, mouseX, mouseY);
     }
 
     //Ball
-    ctx.fillStyle = "tomato";
-    ctx.beginPath();
-    ctx.arc(
-        ball.x + ball.width / 2, // center of x
-        ball.y + ball.height / 2, // center of y
-        ball.width / 2, // radius
-        0,
-        Math.PI * 2
-    );
-    ctx.fill();
+    drawBall();
 
     if (gameOver) {
-        ctx.fillStyle = "rgba(100, 0, 0, 0.6)";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        ctx.fillStyle = "tomato";
-        ctx.font = "bold 40px Iceberg";
-        ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 40);
-
-        ctx.fillStyle = "white";
-        ctx.font = "20px Iceberg";
-        ctx.fillText("The ball is in other lands now...", canvas.width / 2, canvas.height / 2 + 10);
-
+        drawGameOver(ctx, canvas);
     } else if (levelDone) {
-        ctx.fillStyle = "rgba(0, 50, 0, 0.6)";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        ctx.fillStyle = "gold";
-        ctx.font = "bold 40px Iceberg";
-        ctx.fillText("LEVEL CLEARED", canvas.width / 2, canvas.height / 2 - 40);
-
-        ctx.fillStyle = "white";
-        ctx.font = "20px Iceberg";
-        ctx.fillText("You took away the freedom of the ball.", canvas.width / 2, canvas.height / 2 + 10);
+        drawLevelDone(ctx, canvas);
     }
 
     drawDebug();
