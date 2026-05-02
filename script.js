@@ -1,3 +1,6 @@
+import { checkWallCollision, bounceBack, checkCollision } from './js/collisions.js';
+import { LEVELS } from './js/levels.js';
+
 const canvas = document.getElementById("board");
 const ctx = canvas.getContext("2d");
 
@@ -164,66 +167,18 @@ function drawDebug() {
 function update() {
     if (levelDone || gameOver || pause) return;
 
-    showRed = score > 6;
-    showGreen = score > 4;
-    showYellow = score > 2;
-
     ball.x += ball.vx;
     ball.y += ball.vy;
 
-    const ballCenterX = ball.x + ball.width / 2;
-    const ballCenterY = ball.y + ball.height / 2;
+    const level = LEVELS[currentLevel - 1];
+    const sides = ["top", "left", "right", "bottom"];
 
-    //top wall collision
-    if (ball.y < 10) {
-        if (ballCenterX < 300 || ballCenterX > 500) {
-            ball.vy *= -1;
-            ball.y = 10;
-            playSound(hitSound);
-            score -= 1;
-        }
-    }
+    for (const side of sides) {
+        const holesOnSide = level.holes.filter(h => h.side === side);
+        const result = checkCollision(ball, holesOnSide, side, canvas.width, canvas.height, score);
 
-    //left wall collision
-    if (ball.x < 10) {
-        if (ballCenterY < 200 || ballCenterY > 300) {
-            ball.vx *= -1;
-            ball.x = 10;
-            playSound(hitSound);
-            score -= 1;
-        } else if (showRed) {
-            ball.vx *= -1;
-            ball.x = 10;
-            playSound(hitSound);
-            score -= 1;
-        }
-    }
-
-    //right wall collision
-    if (ball.x + ball.width > canvas.width - 10) {
-        if (ballCenterY < 350 || ballCenterY > 450) {
-            ball.vx *= -1;
-            ball.x = canvas.width - ball.width - 10;
-            playSound(hitSound);
-            score -= 1;
-        } else if (showYellow) {
-            ball.vx *= -1;
-            ball.x = canvas.width - ball.width - 10;
-            playSound(hitSound);
-            score -= 1;
-        }
-    }
-
-    //bottom wall collision
-    if (ball.y + ball.height > canvas.height - 10) {
-        if (ballCenterX < 100 || ballCenterX > 200) {
-            ball.vy *= -1
-            ball.y = canvas.height - ball.height - 10;
-            playSound(hitSound);
-            score -= 1;
-        } else if (showGreen) {
-            ball.vy *= -1
-            ball.y = canvas.height - ball.height - 10;
+        if (result.hit) {
+            bounceBack(ball, side, canvas.width, canvas.height);
             playSound(hitSound);
             score -= 1;
         }
