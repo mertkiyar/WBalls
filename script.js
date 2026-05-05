@@ -136,8 +136,10 @@ function update() {
             ball.vy *= 0;
 
             endGameMenu.style.display = "flex";
-            if (gameState.currentLevel == 10) {
-                nextLevelBtn.innerHTML = "RESET";
+
+            // if (gameState.currentLevel == 10) {
+            if (gameState.currentLevel == LEVELS.length) {
+                nextLevelBtn.innerHTML = "PLAY AGAIN";
             } else {
                 nextLevelBtn.innerHTML = "NEXT LEVEL";
             }
