@@ -40,11 +40,11 @@ restartBtn.addEventListener("click", () => {
 nextLevelBtn.addEventListener("click", () => {
     if (gameState.currentLevel < 10) {
         gameState.currentLevel++;
-        startLevel();
     } else {
         gameState.currentLevel = 1;
-        startLevel();
     }
+    localStorage.setItem("wballs_level", gameState.currentLevel);
+    startLevel();
 });
 
 function startLevel() {

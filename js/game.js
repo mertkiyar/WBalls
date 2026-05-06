@@ -1,5 +1,5 @@
 export const gameState = {
-    currentLevel: 1,
+    currentLevel: parseInt(localStorage.getItem("wballs_level")) || 1,
     score: 0,
     pause: false,
     levelDone: false,
