@@ -48,6 +48,7 @@ nextLevelBtn.addEventListener("click", () => {
 });
 
 function startLevel() {
+    localStorage.setItem("wballs_level", gameState.currentLevel);
     const level = LEVELS[gameState.currentLevel - 1];
 
     gameState.score = level.score;
