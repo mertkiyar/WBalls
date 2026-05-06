@@ -38,7 +38,7 @@ restartBtn.addEventListener("click", () => {
 });
 
 nextLevelBtn.addEventListener("click", () => {
-    if (gameState.currentLevel < 10) {
+    if (gameState.currentLevel < LEVELS.length) {
         gameState.currentLevel++;
     } else {
         gameState.currentLevel = 1;
