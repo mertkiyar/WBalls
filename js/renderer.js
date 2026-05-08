@@ -103,8 +103,8 @@ function getWallSegments(holes, edgeLenght, score) {
         }
 
         //hole drawing
-        const isClosed = hole.closesAt !== null && score > hole.closesAt;
-        if (isClosed && hole.color) {
+        const isOpened = hole.opensAt !== null && score > hole.opensAt;
+        if (isOpened && hole.color) {
             segments.push({
                 from: hole.start,
                 to: hole.end,

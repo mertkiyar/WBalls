@@ -19,12 +19,19 @@
         <span style="font-size: 30px; color: gray;">v0.1</span>
     </h1>
 
-    <div id="gameWrapper">
-        <canvas id="board"></canvas>
+    <div id="gameArea">
+        <div id="gameWrapper">
+            <canvas id="board"></canvas>
 
-        <div id="endGameMenu">
-            <button id="restartBtn">TRY AGAIN</button>
-            <button id="nextLevelBtn">NEXT LEVEL</button>
+            <div id="endGameMenu">
+                <button id="restartBtn">TRY AGAIN</button>
+                <button id="nextLevelBtn">NEXT LEVEL</button>
+            </div>
+        </div>
+
+        <div id="colorLegend">
+            <h3 id="legendTitle">HOLES</h3>
+            <div id="legendItems"></div>
         </div>
     </div>
 

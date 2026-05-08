@@ -29,9 +29,9 @@ export function checkCollision(ball, holes, side, canvasWidth, canvasHeight, sco
 
     for (const hole of holes) {
         if (posAlongWall >= hole.start && posAlongWall <= hole.end) {
-            const isClosed = hole.closesAt !== null && score > hole.closesAt;
+            const isOpened = hole.opensAt !== null && score > hole.opensAt;
 
-            if (isClosed) {
+            if (isOpened) {
                 return { hit: true, excaped: false };
             } else {
                 return { hit: false, excaped: false };

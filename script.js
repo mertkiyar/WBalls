@@ -33,6 +33,9 @@ const endGameMenu = document.getElementById("endGameMenu");
 const restartBtn = document.getElementById("restartBtn");
 const nextLevelBtn = document.getElementById("nextLevelBtn");
 
+// color legend
+const legendItems = document.getElementById("legendItems");
+
 restartBtn.addEventListener("click", () => {
     startLevel();
 });
@@ -46,6 +49,38 @@ nextLevelBtn.addEventListener("click", () => {
     localStorage.setItem("wballs_level", gameState.currentLevel);
     startLevel();
 });
+
+function updateLegend(level) {
+    legendItems.innerHTML = "";
+
+    // collect unique color+opensAt pairs
+    const seen = new Map();
+    for (const hole of level.holes) {
+        if (hole.opensAt !== null && hole.color) {
+            if (!seen.has(hole.color)) {
+                seen.set(hole.color, hole.opensAt);
+            }
+        }
+    }
+
+    if (seen.size === 0) {
+        legendItems.innerHTML = '<p class="legend-empty">No holes in this level</p>';
+        return;
+    }
+
+    // sort by opensAt descending (walls that open first at top)
+    const entries = [...seen.entries()].sort((a, b) => b[1] - a[1]);
+
+    for (const [color, opensAt] of entries) {
+        const item = document.createElement("div");
+        item.className = "legend-item";
+        item.innerHTML = `
+            <div class="legend-dot" style="background:${color}"></div>
+            <div class="legend-text">opens at <span>${opensAt}</span></div>
+        `;
+        legendItems.appendChild(item);
+    }
+}
 
 function startLevel() {
     localStorage.setItem("wballs_level", gameState.currentLevel);
@@ -65,6 +100,7 @@ function startLevel() {
     gameState.soundPlayed = false;
 
     endGameMenu.style.display = "none";
+    updateLegend(level);
 }
 
 setupInput(canvas, gameState, ball);
