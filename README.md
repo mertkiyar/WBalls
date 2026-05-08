@@ -12,6 +12,19 @@ Your goal is clear: keep the ball inside the borders.
 
 You choose the direction. The ball moves, hits the walls, and bounces. Every hit matters.
 
+## Screenshots
+
+Here are some gameplay screenshots:
+
+![Mouse Direction with dashed line](screenshots/mouse_direction.png)
+
+![Opened Holes with spesific target number](screenshots/opened_holes.png)
+
+![Level Cleared](screenshots/level_cleared.png)
+
+![Game Over and Debug Mode](screenshots/game_over.png)
+
+
 ## How It Works
 
 Each level gives you a number.
