@@ -117,7 +117,7 @@ function drawDebug() {
     ctx.save();
 
     ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-    ctx.fillRect(10, 10, 120, 90);
+    ctx.fillRect(10, 10, 130, 130);
 
     ctx.fillStyle = "lime";
     ctx.font = "14px Monospace";
@@ -127,10 +127,20 @@ function drawDebug() {
     ctx.fillText(`Y: ${ball.y.toFixed(2)}`, 20, 50);
     ctx.fillText(`VX: ${ball.vx.toFixed(2)}`, 20, 70);
     ctx.fillText(`VY: ${ball.vy.toFixed(2)}`, 20, 90);
+    ctx.fillText(`CX: ${gameState.mouseX.toFixed(2)}`, 20, 110);
+    ctx.fillText(`CY: ${gameState.mouseY.toFixed(2)}`, 20, 130);
 
     ctx.strokeStyle = "yellow";
     ctx.lineWidth = 3;
     ctx.strokeRect(ball.x, ball.y, ball.width, ball.height);
+
+    const level = LEVELS[gameState.currentLevel - 1];
+    if (level.solution) {
+        ctx.beginPath();
+        ctx.arc(level.solution.x, level.solution.y, 8, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+        ctx.fill();
+    }
 
     ctx.restore();
 }
