@@ -145,11 +145,11 @@ function drawDebug() {
     ctx.restore();
 }
 
-function update() {
+function update(multiplier = 1) {
     if (gameState.levelDone || gameState.gameOver || gameState.pause) return;
 
-    ball.x += ball.vx;
-    ball.y += ball.vy;
+    ball.x += ball.vx * multiplier;
+    ball.y += ball.vy * multiplier;
 
     const level = LEVELS[gameState.currentLevel - 1];
     const sides = ["top", "left", "right", "bottom"];
@@ -228,7 +228,16 @@ function draw() {
     drawDebug();
 }
 
-function gameLoop() {
+let lastTime = 0;
+const expectedFrameTime = 1000 / 60;
+
+function gameLoop(timestamp) {
+    if (!lastTime) lastTime = timestamp;
+    const dt = timestamp - lastTime;
+    lastTime = timestamp;
+
+    const multiplier = timestamp ? Math.min(dt / expectedFrameTime, 3) : 1;
+
     if (gameState.levelDone || gameState.gameOver) {
         ball.vx = 0;
         ball.vy = 0;
@@ -241,10 +250,10 @@ function gameLoop() {
         gameState.requestRestart = false;
         startLevel();
     }
-    update();
+    update(multiplier);
     draw();
     requestAnimationFrame(gameLoop);
 }
 
 startLevel();
-gameLoop();
+requestAnimationFrame(gameLoop);
